@@ -1,13 +1,12 @@
 import React from "react";
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
-
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSearchContext } from "../../assets/Context/SearchContext";
 
 const fetchData = async () => {
-  const response = await fetch("https://fakestoreapi.com/products");
+  const response = await fetch("https://fakestoreapi.com/products", {
+    method: "GET",
+  });
+
   return response.json();
 };
 
@@ -20,11 +19,11 @@ const deleteData = async (itemId) => {
 };
 
 function Posts() {
+  const { searchInput } = useSearchContext();
+
   const queryClient = useQueryClient();
 
-  const {
-    data,
-  } = useQuery({
+  const { data } = useQuery({
     queryKey: ["items"],
     queryFn: fetchData,
   });
@@ -34,18 +33,21 @@ function Posts() {
     onSuccess: () => {
       console.log("Item deleted successfully.");
       queryClient.invalidateQueries(["items"]);
-    }
+    },
   });
 
   const handleDelete = (itemId) => {
-    console.log(`Attempting to delete item with ID: ${itemId}`);
     mutation.mutate(itemId);
   };
+
+  const filteredData = data?.filter((item) =>
+    item.category.toLowerCase().includes(searchInput.toLowerCase())
+  );
 
   return (
     <div className="flex items-center justify-center min-h-screen p-8">
       <div className="grid grid-cols-4 gap-8">
-        {data?.map((item) => (
+        {filteredData?.map((item) => (
           <div
             key={item.id}
             className="w-full h-[380px] rounded-lg shadow-md flex flex-col items-center justify-center p-10"
