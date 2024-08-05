@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 
 function Header() {
   return (
@@ -6,9 +7,8 @@ function Header() {
       <div>
         <input type="text" placeholder="جست و جو ...." className='p-2 w-[280px] focus:outline-none rounded-md'/>
       </div>
-      {/* برای افزودن موارد جدید باید یک صفحه بسازی و با Link از ریکت روتر دام استفاده کنی */}
       <div className="font-bold border border-cyan-100 p-3 bg-cyan-200 hover:border-cyan-400 hover:bg-cyan-400 hover:cursor-pointer rounded-sm">
-        افزودن مورد جدید
+        <Link to='newpost'>افزودن پست جدید</Link>
       </div>
     </div>
   );
